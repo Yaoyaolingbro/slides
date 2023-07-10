@@ -8,9 +8,11 @@
     <link rel="shortcut icon" href="./favicon.ico" />
     <link rel="stylesheet" href="./dist/reset.css" />
     <link rel="stylesheet" href="./dist/reveal.css" />
-    <link rel="stylesheet" href="./dist/theme/league.css" id="theme" />
-    <link rel="stylesheet" href="./css/highlight/tomorrow-night-bright.css" />
+    <link rel="stylesheet" href="./dist/theme/simple.css" id="theme" />
+    <link rel="stylesheet" href="./css/highlight/monokai-sublime.css" />
 
+    <link rel="stylesheet" href="./_assets/custom.css" />
+    <link rel="stylesheet" href="./_assets/dark.css" />
 
   </head>
   <body>
@@ -90,7 +92,7 @@ int main(){
       // options from URL query string
       var queryOptions = Reveal().getQueryHash() || {};
 
-      var options = extend(defaultOptions, {"width":1520,"height":950,"margin":0.04,"transition":"convex","slideNumber":true}, queryOptions);
+      var options = extend(defaultOptions, {"transition":"slide","transitionSpeed":"fast","center":false,"width":1520,"height":950,"margin":0.04,"slideNumber":true}, queryOptions);
     </script>
 
 

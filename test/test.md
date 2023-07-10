@@ -2,13 +2,18 @@
 title: Title
 separator: <!--s-->
 verticalSeparator: <!--v-->
-theme: league
-highlightTheme: tomorrow-night-bright
+theme: simple
+highlightTheme: monokai-sublime
+css:
+    - custom.css
+    - dark.css
 revealOptions:
+  transition: 'slide'
+  transitionSpeed: fast
+  center: false
   width: 1520
   height: 950
   margin: 0.04
-  transition: 'convex'
   slideNumber: true
 ---
 
