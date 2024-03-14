@@ -60,7 +60,7 @@ Different data type has different Storage size.(IEE754 \ Binary \ ASCII)
 
 The ALU(can be abstracted as one part in CPU) could help us solve this problem.
 
-<img src="graph\Snipaste_2023-09-21_23-53-55.png" style="zoom: 67%;" />
+<img src="graph\Snipaste_2023-09-21_23-53-55.png" style="zoom: 67%;" >
 
 <!--v-->
 

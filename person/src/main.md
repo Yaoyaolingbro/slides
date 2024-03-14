@@ -15,7 +15,7 @@ revealOptions:
 
 <div class="middle center">
 <div style="width: 100%">
-<img src="./graph/logo.png" style="margin-bottom: 1em">
+<img src="graph/logo.png" style="margin-bottom: 1em">
 
 # 个人介绍
 
