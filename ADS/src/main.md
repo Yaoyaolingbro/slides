@@ -1,0 +1,341 @@
+---
+title: Mini-Search
+separator: <!--s-->
+verticalSeparator: <!--v-->
+theme: simple
+highlightTheme: github
+css: custom.css
+revealOptions:
+    transition: 'slide'
+    transitionSpeed: fast
+    center: false
+    slideNumber: "c/t"
+    width: 1000
+---
+
+<div class="middle center">
+<div style="width: 100%">
+<img src="graph/logo.png" style="margin-bottom: 1em">
+
+# 
+
+<hr/>
+
+ADS Presentation - 2024 Spring
+
+By 余杰加 田柯涵 [杜宗泽](https://github.com/Yaoyaolingbro)
+
+<div style="text-align: right; margin-top: 1em;">
+<p>2024.3.15&emsp;&emsp;&emsp;</p>
+</div>
+
+
+</div>
+</div>
+
+<!--s-->
+
+<div class="middle center">
+<div style="width: 100%">
+
+# Part.1 Project description
+
+</div>
+</div>
+
+<!--v-->
+
+## Background
+
+在这个项目中，我们需要创建一个自己的迷你搜索引擎，可以处理对“威廉·莎士比亚全集”（http://shakespeare.mit.edu/）的查询。</br>
+
+我们的任务包括：
+
+（1）对莎士比亚作品进行词频统计，并尝试识别停用词。</br>
+（2）使用词干提取创建莎士比亚作品的倒排索引。在第（1）部分识别出的停用词不得包含在内。</br>
+（3）在倒排文件索引的基础上编写查询程序，接受用户指定的单词（或短语），并返回包含该单词的文档的ID。</br>
+（4）运行测试以展示查询阈值如何影响结果。</br>
+
+<!--v-->
+
+## Environment & Introduction Knowledge
+
+### OS
+We suggest you using Linux or MacOS for `sh test.sh` to run the test script.
+> If you are using Windows, you can use WSL or Git.
+
+> Meanwhile, you need modify part of the code in `test.sh` to make it work.)
+
+<!--v-->
+
+## Environment & Introduction Knowledge
+
+### Other tools
+- `filesystem` for higher than C++17
+- `python` for higher than 3.X
+> The required python packages are listed in `requirements.txt`. </br>
+> You can install them by running `pip install -r requirements.txt`.
+
+<!--v-->
+
+## Reference
+### Stemmer
+[Porter Stemmer](https://github.com/pisa-engine/Porter2) is used in this project. It is a C++ implementation of the Porter Stemmer algorithm. The original algorithm was published by Martin Porter in 1980. 
+
+### Stop Words
+[Cppreference Stop Words](https://cplusplus.com/forum/beginner/249776/) is used in this project. It is a list of stop words in English.
+
+<!--s-->
+
+<div class="middle center">
+<div style="width: 100%">
+
+# Part.2 Project Design
+
+</div>
+</div>
+
+<!--v-->
+
+## Picking information from web pages  
+
+We use the `requests` and `BeautifulSoup` libraries in Python to obtain the required information from the web page. 
+
+- The required packages are listed in `requirements.txt`. You can install them by running `pip install -r requirements.txt`.
+- Of course, you can modify the url in our `request.py` to build your own lib.
+
+<!--v-->
+### Details
+
+![20240323141234.png](graph/20240323141234.png)
+
+<!--v-->  
+
+## Establish all required index
+
+### 1.The basic form of index  
+
+基本的形式是倒排索引。  
+
+我们可以将倒排索引分为两个部分，字典和倒排表（posting list）。其中的字典部分，我们使用一个STL容器'map'来进行实现： 
+`typedef map<string, vector<Posi>*> INDEX_TYPE;`  
+
+正如上述定义，这个map的关键字是string类型，对应单词本身；容器内元素是一个vector指针，所指的vector存储这个单词的出现信息。也即通过一个vector实现倒排表的存储。  
+
+<!--v-->  
+
+下面这张图简要地展示了上述部分的逻辑:  
+
+![indexpath1.png](graph/index_path1.png)  
+
+<!--v-->  
+
+实际使用时，我们可以通过map自带的find()函数查询当前单词是否已经在字典内，并相应地进行操作：  
+
+![indexcode1.png](graph/index_code1.png)
+
+<!--v-->
+
+### 2. How to write into a file  
+
+为什么以及将什么写入文件？  
+
+回归到搜索引擎的目的和功能
+
+为了达到更好的效果，可以采取哪些策略？  
+
+·更快速高效？  
+·实现更加容易？  
+·能处理大批次文件？  
+
+<!--v-->  
+
+针对上述问题，我们主要采取如下策略
+
+1. 在运行过程中，对于达到一定规模的倒排表，直接整块写入indexfile，并清空原vector.txt；  
+
+![indexpath2.png](graph/index_path2.png)
+
+<!--v-->
+
+2. 同步地建立和维护一个map，用于实现单词到块编号的映射，并在索引建立完成后将该映射的信息写入blockfile.txt；  
+
+该map的逻辑如下：  
+
+<img width = '640' height ='320' src ="graph\search_path1.png"/>  
+
+在索引建立完毕后，我们将该映射关系，也即BLOCK_ID中所包含的信息写入blockfile.txt  
+
+<!--v-->  
+
+最终blockfile.txt的大致格式应如下所示：  
+
+![blocksample.png](graph/blocksample.png)  
+
+即： 单词， ID1， ID2，……
+
+<!--v-->   
+
+3. 根据读取文章的顺序为文章编号，并将该映射关系也写入Allfile.txt。  
+
+这个策略只是为了方便整个程序的实现。因为我们在存储单词出现的文章时，采用的是文章的编号，如下结构体定义：  
+
+![indexcode2.png](graph/index_code2.png)  
+
+因此Allfile文件只是为了后续查询时能够方便地找到对应的文章。
+
+<!--v-->  
+
+## How to implement queries  
+
+首先要考虑的应该是如何衡量一篇文章和所给出的关键字的相关度。  
+
+由于我们拥有的信息仅仅是某个单词在哪几篇文章分别出现了几次，因此我们仅仅提出了以下几种可能：  
+
+1. 将出现次数相加  
+2. 取该文章中各关键词出现次数的min值  
+3. 将该文章中各个关键词出现次数累乘  
+
+由于此次实验的重点并不在此，我们没有进一步研究，并简单地选取了1作为查询原则。
+
+<!--v-->
+
+在初次查询时，由于索引文件尚未建立，因此要跑一遍建立索引的过程。  
+此时大量的信息留在内存中（主要是存储字典和blockid的两个map），因此可以直接借助这两个map来进行查询：  
+
+![searchcode1.png](graph/search_code1.png)  
+
+<!--v-->  
+
+大致原理如下所示，和BLOCK_ID的实现逻辑完全一致
+
+<img width = '640' height ='320' src ="graph\search_path1.png"/>
+
+<!--v-->  
+
+当已经建立好所有文件时，为了查询的高效，我们自然不愿意再跑一遍建立索引的过程。  
+
+由于所有信息都存储在文件里了，此时的查询路径如下所示：  
+
+![searchpath2.png](graph/search_path2.png)  
+
+<!--v-->  
+
+是否解决了大量数据的问题（Bonus）？ 
+很遗憾我们只解决了一小部分。按照上述内容实现的搜索引擎，能解决文章数量较多的情况，但不能解决不同的关键词较多的情况（根据估算，如果是Bonus要求的四亿个不同单词，最坏可能需要300g左右的内存）。  
+   
+当然，就实际情况来说，一般的英文字典最多不过10万个左右不同的单词，这样的规模就可以通过一些调整来完成功能的实现。
+
+<!--v-->
+
+效率问题（时间复杂度）？
+根据网上的资料，map内部应当是一颗平衡二叉搜索树，因此查询和插入新结点的复杂度均为logn； 
+因此重建索引的时间复杂度为 MlogM， M为总的单词数。这个数量非常庞大，因此每次重建都要花费很多时间。  
+而每次查询的时间复杂度为 K(logM + N) + NlogN， N为总的文章数，K为关键词数。因为每次都需要遍历统计所有文章的相关度（KN次），并完成排序（NlogN的规模）。   
+就实际使用的结果来看，查询操作几乎是一瞬间就给出结果；而建立过程则相对漫长。  
+
+<!--s-->  
+
+<div class="middle center">  
+<div style="width: 100%">  
+
+# Part.3 Testing Results   
+ 
+</div>
+</div>
+
+<!--v-->  
+
+## File read accuracy
+The system ls *.txt to show the number of data files in the current directory.
+![20240318001030.png](graph/20240318001030.png)
+
+The program reads the file and outputs the number of data files read.
+![20240318001206.png](graph/20240318001206.png)  
+
+<!--v-->
+
+When we do not use 're' to rebuild the index, the program reads the data from the file and outputs the number of data files read.
+![20240318091915.png](graph/20240318091915.png)  
+
+<!--v-->
+
+## Stemmer and stop words Test
+
+### Stemmer
+
+| Original word | Past Tense word |
+| ------------- | ------------ |
+|![20240318092202.png](graph/20240318092202.png) | ![20240318092315.png](graph/20240318092315.png) |
+
+| Original word | Present Tense word |
+| ------------- | ------------ |
+|![20240318092506.png](graph/20240318092506.png) | ![20240318092544.png](graph/20240318092544.png) |  
+
+<!--v-->
+
+| Original word | Third person singular |
+| ------------- | ------------ |
+| ![20240318092957.png](graph/20240318092957.png) | ![20240318093024.png](graph/20240318093024.png) |
+
+| Original word | Plural word |
+| ------------- | ------------ |
+|![20240318093327.png](graph/20240318093327.png) | ![20240318093400.png](graph/20240318093400.png) |  
+
+<!--v-->
+
+### Stop words
+
+![20240318095344.png](graph/20240318095344.png)
+![20240318095427.png](graph/20240318095427.png)
+
+<!--v-->
+
+### Multi-word Test
+
+![20240318100147.png](graph/20240318100147.png)    
+
+<!--v-->
+
+**HAMLET single word test:**
+![20240318100255.png](graph/20240318100255.png)
+
+Meanwhile, you can search the scene where the word appears in the Hamlet play.
+
+It could be verified that the program can correctly read the data from the file and the stemmer and stop words function works well.  
+
+<!--v-->
+
+#### Similar Test
+
+**Simple multiple words test:**
+![20240318101314.png](graph/20240318101314.png)  
+
+<!--v-->
+
+![20240318101358.png](graph/20240318101358.png)  
+
+<!--v-->
+
+![20240318101607.png](graph/20240318101607.png)  
+
+<!--v-->
+
+**Multiple stop words test:**
+![20240318101732.png](graph/20240318101732.png)  
+
+<!--v-->
+
+It's same as the following test, the program can correctly read the data from the file and the stemmer and stop words function works well.
+![20240318101814.png](graph/20240318101814.png)  
+
+<!--v-->
+
+**Multiple words test:**
+| Simple word | Stemmer word |
+| ------------- | ------------ |
+|![20240318102139.png](graph/20240318102139.png) | ![20240318102238.png](graph/20240318102238.png)|
+
+It's all the **same and correct!!!**
+
+<!--v-->
