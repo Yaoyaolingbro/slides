@@ -1,34 +1,13 @@
-LECNO = 0
-FLAGS = --scripts https://cdn.tonycrane.cc/heti/heti.js,heti_worker.js --template template.html
-BASE_DIR = ../site
-
-.PHONY: live build all clean live-home build-home
+.PHONY: live build clean
 
 live:
-	@echo "Previewing lec$(LECNO) slides..."
-	-@reveal-md lec$(LECNO).md -w $(FLAGS) || true
+	@echo "Previewing main slides..."
+	-@reveal-md main.md -w --scripts https://cdn.tonycrane.cc/heti/heti.js,heti_worker.js --template template.html || true
 
 build:
-	@echo "Building lec$(LECNO) slides..."
-	@reveal-md lec$(LECNO).md $(FLAGS) --static $(BASE_DIR)/lec$(LECNO) --assets-dir assets
-	@rm $(BASE_DIR)/lec$(LECNO)/lec$(LECNO).html
-	@cp -r lec$(LECNO) $(BASE_DIR)/lec$(LECNO)/
-
-live-home:
-	@echo "Previewing home slides..."
-	-@reveal-md home.md -w $(FLAGS) || true
-
-build-home:
-	@echo "Building home slides..."
-	@reveal-md home.md $(FLAGS) --static $(BASE_DIR) --assets-dir assets
-	@rm $(BASE_DIR)/home.html
-
-all:
-	@echo "Building all slides..."
-	@make build-home
-	@for i in `seq 0 6`; do \
-		make LECNO=$$i build; \
-	done
+	@echo "Building main slides..."
+	@reveal-md main.md --scripts https://cdn.tonycrane.cc/heti/heti.js,heti_worker.js --template template.html --static ../site --assets-dir assets
+	@rm ../site/main.html
 
 clean:
 	@echo "Cleaning up..."
