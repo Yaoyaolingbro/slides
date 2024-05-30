@@ -100,5 +100,11 @@
         document.querySelector(".backgrounds").setAttribute("style", document.querySelector(".slides").style.cssText);
       });
     </script>
+
+    <script src="plugin/math/math.js"></script>
+    <script>
+      Reveal.initialize({ plugins: [ RevealMath.KaTeX ] });
+    </script>
+
   </body>
 </html>
