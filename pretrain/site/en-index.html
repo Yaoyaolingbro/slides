@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>基于蛋白质结构表征的预训练模型</title>
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="./dist/reset.css" />
+    <link rel="stylesheet" href="./dist/reveal.css" />
+    <link rel="stylesheet" href="./dist/theme/simple.css" id="theme" />
+    <link rel="stylesheet" href="./css/highlight/github.css" />
+
+    <link rel="stylesheet" href="./assets/custom.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-markdown data-separator="<!--s-->" data-separator-vertical="<!--v-->">
+          <textarea data-template>
+            
+
+<div class="middle center">
+<div style="width: 100%">
+<img src="graph/logo.png" style="margin-bottom: 1em">
+
+# SSDM: Pretrain Model Based on Joint Protein Representation
+
+<hr/>
+
+2024 Spring
+
+By [MIX2207 Daniel](https://github.com/Yaoyaolingbro)
+
+<div style="text-align: right; margin-top: 1em;">
+<p>2024.6.6&emsp;&emsp;&emsp;</p>
+</div>
+
+
+</div>
+</div>
+
+<!--s-->
+
+<div class="middle center">
+<div style="width: 100%">
+
+# Part.1 Introduction
+
+</div>
+</div>
+
+<!--v-->
+## Protein
+Proteins, as fundamental components of life, play key roles in many biological processes, from enzyme reactions to cell signaling.
+
+Proteins are macromolecules composed of residues, i.e., amino acids, linked together in chains. Despite only 20 standard residue types, their numerous combinations contribute to the vast diversity of proteins found in nature.
+
+<!--v-->
+
+## Protein Function
+Protein function prediction is an important task in bioinformatics, playing a significant role in fields such as elucidation of disease mechanisms and discovery of drug targets.
+
+*Because traditional biochemical experiments for determining protein function are often costly, time-consuming, and low-throughput, developing efficient and accurate computational methods for protein function prediction is crucial.*
+
+<!--v-->
+
+Focus on the complex three-dimensional structures and dynamic behaviors, which are fundamental to their functional diversity.
+
+<img src="https://mmbiz.qpic.cn/mmbiz_gif/5qv5QsBmI9CseBntBibHenTVJDVaYTeTgp9NRejK84m1d9hCuCY0VrXAicbprcGqTiahNZcMZUicbyNkiaEDb8et1CQ/640?wx_fmt=gif&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1">
+
+<!--v-->
+
+## So what is the Pretrain Model?
+
+- A Pretrained Model is a model pretrained on large-scale data (a very broad definition 😂).
+- After pretraining, the model can learn the data distribution, improving the model's generalization ability.
+- Pretrained Models can be used for various tasks, such as classification, clustering, and generation.
+
+> Pretrain Model have made significant progress in various downstream tasks, such as protein structure prediction, protein function prediction, and protein-protein interaction prediction.
+
+<!--v-->
+## Example
+Yet, the sheer complexity of protein structures and interactions poses challenges. 
+
+> Figure1: Comparisons of PDB (blue)and AlphaFold (red) structures for GB1 (PDB:2GI9) and SARS-Cov-2 RBD bound to human ACE2 (PDB:6M0J, orange & grey).
+![20240529163343.png](graph/20240529163343.png)
+
+
+
+<!--v-->
+## BackGround
+| Protein Basic Structure | SE(3) diffusion model  |
+| --- | --- |
+|![20240529162959.png](graph/20240529162959.png)| ![20240529165239.png](graph/20240529165239.png) |
+
+<!--s-->
+
+<div class="middle center">
+<div style="width: 100%">
+
+# Part.2 Related Work & Method
+
+</div>
+</div>
+
+<!--v-->
+## Protein Encoder
+- All-atom-level protein structure encoders are extremely important!!!
+> Traditional protein structure encoders are mainly based on Graph Convolutional Networks (GCN) and Autoencoders (AE) — but these methods have certain limitations in handling all-atom-level protein structures (Should we really adopt such methods?).
+
+Therefore, we propose a new protein structure encoder from attention-based framework.
+
+<!--v-->
+
+## Backbone Representation
+The diagram of our proposed backbone-level representation is as follows:
+
+(a) Construction of the backbone coordinate system for amino acid i.
+
+(b) Calculation of three Euler angles between the backbone coordinate systems of amino acids i and j.
+
+
+![20240529214502.png](graph/20240529214502.png)
+
+<!--v-->
+
+## Residua Embedding
+The diagram of our proposed residue embedding is as follows:
+
+> ![20240529214817.png](graph/20240529214817.png)
+
+
+<!--v-->
+## Attention-based Model
+We chose the attention-based model due to its better performance in extracting features.
+Regarding the choice of SS (Structure & Sequence Joint Information), we conducted the following ablation study:
+![20240529220515.png](graph/20240529220515.png)
+
+<!--v-->
+## How to Train
+Above all, our train model structure shows below:
+
+![20240529220817.png](graph/20240529220817.png)
+
+> Denoise to be continued......
+
+
+<!--s-->
+
+<div class="middle center">
+<div style="width: 100%">
+
+# Part.3 Experiment & Result
+
+</div>
+</div>
+
+
+
+<!--v-->
+## Different prediction
+Self-prediction method. We use i, j, k, and t to denote sampled residue indices. The tasks are associated with their respective MLP heads: fres, fdis, fang, and fdih. CE(·) is the cross-entropy loss, and angles are discretized using bin(·).
+
+![20240530112247.png](graph/20240530112247.png)
+
+<!-- <section>
+\[
+\begin{array}{lc}
+\hline \text { Method } & \text { Loss function } \\
+\hline \text { Residue Type Prediction } & \operatorname{CE}\left(f_{\text {res }}\left(\boldsymbol{z}_{i}\right), r_{i}\right) \\
+\text { Distance Prediction } & \left(f_{\text {dis }}\left(\boldsymbol{z}_{i}, \boldsymbol{z}_{j}\right)-\left\|\boldsymbol{x}_{i}-\boldsymbol{x}_{j}\right\|_{2}\right)^{2} \\
+\text { Angle Prediction } & \left.\mathrm{CE}\left(f_{\text {ang }} \boldsymbol{z}_{i}, \boldsymbol{z}_{j}, \boldsymbol{z}_{k}\right), \operatorname{bin}(\angle i j k)\right) \\
+\text { Dihedral Prediction } & \mathrm{CE}\left(f_{\text {dih }}\left(\boldsymbol{z}_{i}, \boldsymbol{z}_{j}, \boldsymbol{z}_{k}, \boldsymbol{z}_{t}\right), \operatorname{bin}(\angle i j k t)\right) \\
+\hline
+\end{array}
+\]
+</section> -->
+
+
+<!--v-->
+
+## Denoise Details
+
+These methods are inspired by the success of diffusion models in capturing the joint distribution of sequences and structures.
+During pretraining, noise levels $t\in{1,..,T}$ are applied to structures and sequences, with higher levels indicating more noise.
+
+The encoder representations are used for denoising through the following loss functions:
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable columnspacing="1em" rowspacing="4pt"><mtr><mtd><msub><mrow><mi data-mjx-variant="-tex-calligraphic" mathvariant="script">L</mi></mrow><mrow><mtext>struct&nbsp;</mtext></mrow></msub><mo>=</mo><msub><mrow><mi mathvariant="double-struck">E</mi></mrow><mrow><mi>t</mi><mo>∼</mo><mo fence="false" stretchy="false">{</mo><mn>1</mn><mo>,</mo><mo>…</mo><mo>,</mo><mi>T</mi><mo fence="false" stretchy="false">}</mo></mrow></msub><msub><mrow><mi mathvariant="double-struck">E</mi></mrow><mrow><mi>ϵ</mi><mo>∼</mo><mrow><mi data-mjx-variant="-tex-calligraphic" mathvariant="script">N</mi></mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi>I</mi><mo stretchy="false">)</mo></mrow></msub><mrow data-mjx-texclass="INNER"><mo data-mjx-texclass="OPEN">[</mo><msubsup><mrow data-mjx-texclass="INNER"><mo data-mjx-texclass="OPEN">∥</mo><mi>ϵ</mi><mo>−</mo><msub><mi>f</mi><mrow><mtext>noise&nbsp;</mtext></mrow></msub><mrow data-mjx-texclass="INNER"><mo data-mjx-texclass="OPEN">(</mo><msup><mi mathvariant="bold-italic">z</mi><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></msup><mo>,</mo><msup><mi mathvariant="bold-italic">x</mi><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></msup><mo data-mjx-texclass="CLOSE">)</mo></mrow><mo data-mjx-texclass="CLOSE">∥</mo></mrow><mrow><mn>2</mn></mrow><mrow><mn>2</mn></mrow></msubsup><mo data-mjx-texclass="CLOSE">]</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd><msub><mrow><mi data-mjx-variant="-tex-calligraphic" mathvariant="script">L</mi></mrow><mrow><mtext>seq&nbsp;</mtext></mrow></msub><mo>=</mo><msub><mrow><mi mathvariant="double-struck">E</mi></mrow><mrow><mi>t</mi><mo>∼</mo><mo fence="false" stretchy="false">{</mo><mn>1</mn><mo>,</mo><mo>.</mo><mo>.</mo><mo>,</mo><mi>T</mi><mo fence="false" stretchy="false">}</mo></mrow></msub><munder><mo data-mjx-texclass="OP">∑</mo><mrow><mi>i</mi></mrow></munder><mi>CE</mi><mo data-mjx-texclass="NONE">⁡</mo><mrow data-mjx-texclass="INNER"><mo data-mjx-texclass="OPEN">(</mo><msub><mi>r</mi><mrow><mi>i</mi></mrow></msub><mo>,</mo><msub><mi>f</mi><mrow><mtext>res&nbsp;</mtext></mrow></msub><mrow data-mjx-texclass="INNER"><mo data-mjx-texclass="OPEN">(</mo><msubsup><mi mathvariant="bold-italic">z</mi><mrow><mi>i</mi></mrow><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></msubsup><mo data-mjx-texclass="CLOSE">)</mo></mrow><mo data-mjx-texclass="CLOSE">)</mo></mrow><mo>,</mo></mtd></mtr></mtable></math>
+
+
+
+
+<!--v-->
+
+## Downstream Task
+
+We evaluated the effectiveness of our proposed method in functional annotation and structural attribute prediction tasks on Atom3D
+
+Four key downstream tasks are considered:
+
+**1. Enzyme Commission (EC) Number Prediction:** This task involves predicting EC numbers that describe a protein's catalytic behavior in biochemical reactions. It's formulated as 538 binary classification problems based on the third and fourth levels of the EC tree [Webb, 1992]. We use dataset splits from Gligorijevic et al. (2021) and test on sequences with up to 95% identity cutoff.
+
+<!--v-->
+
+**2. Gene Ontology (GO) Term Prediction:** This benchmark includes three tasks: predicting a protein's biological process (BP), molecular function (MF), and cellular component (CC). Each task is framed as multiple binary classification problems based on GO term annotations. We employ dataset splits from Gligorijevic et al. (2021) with a 95% sequence identity cutoff.
+
+**3. Protein Structure Ranking (PSR):** This task involves predicting global distance test scores for structure predictions submitted to the Critical Assessment of Structure Prediction (CASP) [Kryshtafovych et al., 2019]. The dataset is partitioned by competition year.
+
+<!--v-->
+
+**4. Mutation Stability Prediction (MSP):** The goal is to predict if a mutation enhances a protein complex's stability. The dataset is divided based on a 30% sequence identity.
+
+<!--v-->
+
+## Result
+
+![20240530153919.png](graph/20240530153919.png)
+
+<!--v-->
+
+![20240530153940.png](graph/20240530153940.png)
+
+<!-- | **Method**           | **PLM** | **Struct. Info.** | **EC**      |      | **GO-BP**   |      | **GO-MF**   |      | **GO-CC**   |      | **PSR**     |      | **MSP**     | Thermo stability |
+| -------------------- | ------- | ----------------- | ----------- | ---- | ----------- | ---- | ----------- | ---- | ----------- | ---- | ----------- | ---- | ----------- | ---------------- |
+| **ProtBERT-BFD**     | ✔️       | ❌                 | 0.838       |      | 0.279       |      | 0.456       |      | 0.408       |      | -           |      | -           | 0.680            |
+| **ESM-2-650M**       | ✔️       | ❌                 | _0.880_     |      | _0.460_     |      | _0.661_     |      | _0.445_     |      | -           |      | -           | 0.708            |
+| **ESM-SSDM**         | ✔️       | ✔️                 | 0.730       |      | 0.356       |      | 0.503       |      | 0.414       |      | 0.708       |      | 0.549       | **0.724**        |
+| - w/ serial fusion   | ✔️       | ✔️                 | **_0.890_** |      | **_0.488_** |      | **_0.681_** |      | _0.464_     |      | _0.829_     |      | **_0.685_** | -                |
+| - w/ parallel fusion | ✔️       | ✔️                 | 0.792       |      | 0.384       |      | 0.573       |      | 0.407       |      | 0.760       |      | 0.644       |                  |
+| - w/ cross fusion    | ✔️       | ✔️                 | 0.884       |      | 0.470       |      | 0.660       |      | 0.462       |      | 0.747       |      | 0.408       |                  |
+| **GVP**              | ❌       | ✔️                 | 0.489       |      | 0.326       |      | 0.426       |      | 0.420       |      | 0.726       |      | _0.664_     | 0.571            |
+| **ESM-GVP**          |         |                   |             |      |             |      |             |      |             |      |             |      |             |                  |
+| - w/ serial fusion   | ✔️       | ✔️                 | _0.881_     |      | _0.473_     |      | _0.668_     |      | _0.485_     |      | **_0.866_** |      | 0.617       |                  |
+| - w/ parallel fusion | ✔️       | ✔️                 | 0.872       |      | 0.446       |      | 0.657       |      | 0.455       |      | 0.702       |      | 0.592       |                  |
+| - w/ cross fusion    | ✔️       | ✔️                 | 0.880       |      | 0.465       |      | 0.664       |      | 0.469       |      | 0.764       |      | 0.583       |                  |
+| **CDConv**           | ❌       | ✔️                 | 0.820       |      | 0.453       |      | 0.654       |      | **_0.479_** |      | 0.786       |      | 0.529       | 0.660            |
+| **ESM-CDConv**       |         |                   |             |      |             |      |             |      |             |      |             |      |             |                  |
+| - w/ serial fusion   | ✔️       | ✔️                 | _0.880_     |      | _0.465_     |      | 0.658       |      | 0.475       |      | _0.851_     |      | 0.566       |                  |
+| - w/ parallel fusion | ✔️       | ✔️                 | 0.879       |      | 0.448       |      | _0.662_     |      | 0.455       |      | 0.803       |      | _0.602_     |                  | -->
+
+<!--v-->
+
+
+## Result
+ESM-SSDM (serial fusion) results on EC and GO-MF with different learning rate ratios.
+![20240530115734.png](graph/20240530115734.png)
+
+<!--v-->
+## Dataset
+![20240530160154.png](graph/20240530160154.png)
+
+<!--s-->
+
+<div class="middle center">
+<div style="width: 100%">
+
+# Part.4 Discussion
+
+</div>
+</div>
+
+<!--v-->
+## Reinforcement learning
+I have always believed that the mainstream modeling ideas based on MLP have always originated from the exploration and thinking of some human consciousness, and the potential of reinforcement learning has not been fully explored, especially in the field of science......
+![20240529215428.png](graph/20240529215428.png)
+
+<!--v-->
+## Expansion to Other Protein-Related Tasks
+
+Adapt our method for additional protein-related tasks, such as predicting protein-protein interactions and post-translational modifications.
+
+<!--s-->
+
+<div class="middle center">
+<div style="width: 100%">
+
+# Thank You for Listening!
+
+> Sincerely criticism and correction are expected!
+
+</div>
+</div>
+
+<!--v-->
+## Reference
+[1]	Bin Ma and Richard Johnson. De novo sequencing and homology searching. Molecular & cellular proteomics, 11(2), 2012.
+
+[2]	Bin Ma. Novor: real-time peptide de novo sequencing software. Journal of the American Society for Mass Spectrometry, 26(11):1885–1894, 2015.
+
+[3]	Yue Cao, Payel Das, Vijil Chenthamarakshan, Pin-Yu Chen, Igor Melnyk, and Yang Shen. Fold2seq: A joint sequence(1d)-fold(3d) embedding-based generative model for protein design.
+
+<!--v-->
+
+[4]	Bowen Jing, Stephan Eismann, Pratham N. Soni, and Ron O. Dror. Learning from protein structure with geometric vector perceptrons. In International Conference on Learning Representations, 2021.
+
+[5]	Pedro Hermosilla, Marco Schäfer, Matˇ ej Lang, Gloria Fackelmann, Pere Pau Vázquez, Barbora Kozlíková, Michael Krone, Tobias Ritschel, and Timo Ropinski. Intrinsic-extrinsic convolution and pooling for learning on 3d protein structures.
+
+[6]	Ahmed Elnaggar, Michael Heinzinger, Christian Dallago, Ghalia Rehawi, Wang Yu, Llion Jones, Tom Gibbs, Tamas Feher, Christoph Angerer, Martin Steinegger, Debsindhu Bhowmik, and Burkhard Rost. Prottrans: Towards cracking the language of lifes code through self-supervised deep learning and high performance computing.
+
+<!--v-->
+
+[7]	Pedro Hermosilla and Timo Ropinski. Contrastive representation learning for 3d protein structures. In Submitted to The Tenth International Conference on Learning Representations, 2022.
+
+[8]	Limei Wang, Haoran Liu, Yi Liu, Jerry Kurtin, and Shuiwang Ji. Learning protein representations via complete 3d graph networks. ArXiv, abs/2207.12600, 2022a.
+
+[9]	John Jumper, Richard Evans, Alexander Pritzel, Tim Green, Michael Figurnov, Olaf Ronneberger, Kathryn Tunyasuvunakool, Russ Bates, Augustin Žídek, Anna Potapenko, et al. Highly accurate protein structure prediction with alphafold. Nature, 596(7873):583–589, 2021.
+
+          </textarea>
+        </section>
+      </div>
+    </div>
+
+    <script src="./dist/reveal.js"></script>
+
+    <script src="./mermaid/dist/mermaid.min.js"></script>
+
+    <script src="./plugin/markdown/markdown.js"></script>
+    <script src="./plugin/highlight/highlight.js"></script>
+    <script src="./plugin/zoom/zoom.js"></script>
+    <script src="./plugin/notes/notes.js"></script>
+    <script src="./plugin/math/math.js"></script>
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        slideNumber: true,
+        highlight: {
+          highlightOnLoad: false
+        },
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath
+        ]
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"transition":"slide","transitionSpeed":"fast","center":false,"slideNumber":"c/t","width":1000,"_":["main.md"],"scripts":"https://cdn.tonycrane.cc/heti/heti.js,heti_worker.js","static":"../site","assets-dir":"assets","assetsDir":"assets"}, queryOptions);
+    </script>
+
+    <script src="https://cdn.tonycrane.cc/heti/heti.js"></script>
+    <script src="./assets/heti_worker.js"></script>
+
+    <script>
+      Reveal.initialize(options);
+      Reveal.addEventListener('ready', function (event) {
+        const blocks = Reveal.getRevealElement().querySelectorAll('pre code:not(.mermaid)');
+        const hlp = Reveal.getPlugin('highlight');
+        blocks.forEach(hlp.highlightBlock);
+      });
+    </script>
+
+    <script>
+      const mermaidOptions = extend({ startOnLoad: false }, {});
+      mermaid.startOnLoad = false;
+      mermaid.initialize(mermaidOptions);
+      const cb = function (event) { mermaid.init(mermaidOptions, '.stack.present>.present pre code.mermaid'); };
+      Reveal.addEventListener('ready', cb);
+      Reveal.addEventListener('slidetransitionend', cb);
+    </script>
+  </body>
+</html>
