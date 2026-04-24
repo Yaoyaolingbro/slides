@@ -1,0 +1,352 @@
+@import url(https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&family=Source+Code+Pro&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400;1,700);
+@import url(https://gcore.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css);
+
+:root {
+  --r-main-font: "JetBrains Mono", "LXGW WenKai Screen", sans-serif;
+  --r-heading-font: "JetBrains Mono", "LXGW WenKai Screen", sans-serif;
+  --r-code-font: "JetBrains Mono", "LXGW WenKai Screen", sans-serif;
+  --zju-blue: rgb(0, 63, 163);
+  --zju-blue-light: rgba(0, 63, 163, 0.08);
+  --zju-blue-mid: rgba(0, 63, 163, 0.18);
+}
+
+.reveal .slide-number {
+  font-size: 26px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, .3);
+}
+
+.reveal .slides {
+  border: 1.5px #ddd solid;
+  border-radius: 7px;
+  text-align: left;
+  font-weight: 300;
+}
+
+.reveal section {
+  padding: 20px 0;
+}
+
+.reveal p, .reveal li, .reveal center {
+  font-size: 28px;
+}
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+  font-weight: 700;
+}
+.reveal p, .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+  padding: 0 25px 0 25px;
+}
+
+.reveal pre {
+  font-size: 20px;
+  border-radius: 3mm;
+}
+.reveal pre code {
+  max-height: none;
+  border-radius: 3mm;
+  padding: 20px;
+  line-height: 28px;
+}
+
+.reveal ul {
+  margin: 0 0 0 1.5em;
+  display: block;
+  margin-right: 15px;
+}
+.reveal ol {
+  margin: 0 0 0 2em;
+}
+.reveal li {
+  margin-top: 12px;
+}
+.reveal li + li {
+  margin-top: 12px;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  text-align: left;
+  margin: 0 0 20px 0;
+  color: #222;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: normal;
+}
+.reveal h1 {
+  margin: 0 10px;
+  font-size: 50px;
+}
+.reveal .middle h1,
+.reveal .middle h2,
+.reveal .middle h3 {
+  text-align: center;
+}
+.reveal h2 {
+  font-size: 44px;
+  border-bottom: 2px solid var(--zju-blue);
+  padding-bottom: 16px;
+}
+.reveal h3 { font-size: 1.1em; }
+.reveal h4 { font-size: 1.0em; }
+
+.reveal .center {
+  text-align: center;
+}
+.reveal .small-text {
+  font-size: 0.75em;
+  color: #666;
+}
+
+.reveal .middle {
+  height: 660px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+section .center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.reveal hr {
+  border: 10px solid white;
+}
+.reveal .middle hr {
+  border: 0;
+  height: 2px;
+  background: radial-gradient(ellipse at center, rgba(1, 14, 54, 0.324) 0, hsla(0, 0%, 100%, 0) 75%);
+  margin-bottom: 40px;
+}
+
+/* ── Blockquote ── */
+.reveal blockquote {
+  background: var(--zju-blue-light);
+  border-left: 4px solid var(--zju-blue);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 20px;
+  margin: 8px 25px 16px 25px;
+  font-style: normal;
+  width: auto;
+  box-shadow: none;
+  font-size: 0.9em;
+  color: #333;
+}
+
+/* ── Cards ── */
+.reveal .card-row {
+  display: flex;
+  gap: 14px;
+  padding: 4px 25px;
+  margin-top: 6px;
+}
+.reveal .card {
+  flex: 1;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  padding: 16px 18px;
+  background: #fafafa;
+}
+.reveal .card .card-title {
+  font-size: 0.95em;
+  font-weight: 700;
+  color: var(--zju-blue);
+  margin-bottom: 8px;
+  display: block;
+}
+.reveal .card p, .reveal .card li {
+  font-size: 0.78em;
+  margin-top: 6px;
+  color: #444;
+}
+.reveal .card ul {
+  margin-left: 1em;
+}
+
+/* ── Step grid (读想做写) ── */
+.reveal .step-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 4px 25px;
+  margin-top: 6px;
+}
+.reveal .step-box {
+  border: 2px solid var(--zju-blue);
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: center;
+  background: var(--zju-blue-light);
+}
+.reveal .step-box .step-num {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: var(--zju-blue);
+  display: block;
+  line-height: 1.1;
+}
+.reveal .step-box .step-name {
+  font-size: 0.88em;
+  font-weight: 600;
+  display: block;
+  margin: 3px 0 4px;
+  color: #222;
+}
+.reveal .step-box .step-desc {
+  font-size: 0.65em;
+  color: #555;
+  display: block;
+  line-height: 1.3;
+}
+
+/* ── Big quote (Part 1 value pages) ── */
+.reveal .big-quote {
+  font-size: 0.6em;
+  font-weight: 600;
+  text-align: center;
+  color: var(--zju-blue);
+  padding: 18px 40px;
+  line-height: 1.6;
+  border-top: 2px solid var(--zju-blue-mid);
+  border-bottom: 2px solid var(--zju-blue-mid);
+  margin: 18px 25px;
+}
+
+/* ── Highlight pill ── */
+.reveal .tag {
+  display: inline-block;
+  background: var(--zju-blue);
+  color: white;
+  border-radius: 20px;
+  padding: 2px 12px;
+  font-size: 0.68em;
+  margin: 2px 4px;
+  vertical-align: middle;
+}
+
+/* ── Profile layout ── */
+.reveal .profile-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  padding: 0 25px;
+  margin-top: 6px;
+}
+.reveal .profile-photo {
+  flex: 0 0 200px;
+}
+.reveal .profile-photo img {
+  width: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.reveal .profile-info {
+  flex: 1;
+}
+.reveal .profile-info p,
+.reveal .profile-info li {
+  font-size: 0.82em;
+  margin-top: 5px;
+}
+.reveal .profile-info ul {
+  margin-left: 1em;
+}
+.reveal .profile-section {
+  margin-bottom: 10px;
+}
+.reveal .profile-section-title {
+  font-size: 0.78em;
+  font-weight: 700;
+  color: var(--zju-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* ── Priority table ── */
+.reveal .priority-row {
+  display: flex;
+  gap: 12px;
+  padding: 4px 25px;
+  margin-top: 8px;
+}
+.reveal .priority-item {
+  flex: 1;
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: center;
+}
+.reveal .priority-item.high {
+  background: rgba(0, 63, 163, 0.12);
+  border: 2px solid var(--zju-blue);
+}
+.reveal .priority-item.mid {
+  background: rgba(0, 63, 163, 0.05);
+  border: 1.5px solid #aac;
+}
+.reveal .priority-item.low {
+  background: #f5f5f5;
+  border: 1.5px solid #ddd;
+}
+.reveal .priority-item .p-label {
+  font-size: 0.68em;
+  font-weight: 700;
+  color: #888;
+  display: block;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.reveal .priority-item .p-title {
+  font-size: 0.88em;
+  font-weight: 600;
+  color: #222;
+  display: block;
+  margin-bottom: 6px;
+}
+.reveal .priority-item .p-desc {
+  font-size: 0.72em;
+  color: #555;
+  display: block;
+  line-height: 1.4;
+}
+
+/* ── Mul-cols ── */
+.reveal .mul-cols {
+  display: flex;
+}
+.reveal .mul-cols .col {
+  width: 100%;
+}
+
+/* ── Tables ── */
+.reveal table {
+  font-size: 28px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+html.print-pdf .reveal pre code {
+  font-family: var(--r-code-font) !important;
+}
+
+/* ── Heti ── */
+.reveal heti-spacing { display: inline; }
+.reveal heti-spacing + sup, .reveal heti-spacing + sub { margin-inline-start: 0; }
+.reveal .heti-spacing { font-size: 0.5em; vertical-align: top; }
+.reveal .heti-spacing-start { margin-inline-end: 0.25em; }
+.reveal .heti-spacing-end { margin-inline-start: 0.25em; }
+.reveal heti-adjacent { display: inline; }
+.reveal .heti-adjacent-half { margin-inline-end: -0.5em; }
+.reveal .heti-adjacent-quarter { margin-inline-end: -0.25em; }
+
+.reveal .slide-number {
+  left: 8px;
+  right: unset;
+}
+.MathJax .math { font-size: 80%; }
+.katex { font-size: 1em; }
