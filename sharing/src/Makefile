@@ -12,6 +12,7 @@ build:
 	@echo "Building main slides..."
 	@reveal-md main.md --scripts https://cdn.tonycrane.cc/heti/heti.js,heti_worker.js  --static ../site --assets-dir assets
 	@rm ../site/main.html
+	@cp -r graph ../site/graph
 
 print:
 	@echo "Building print version of main slides..."
