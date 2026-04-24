@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slides — 杜宗泽</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://gcore.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" rel="stylesheet">
+  <style>
+    :root {
+      --blue: rgb(0, 63, 163);
+      --blue-light: rgba(0, 63, 163, 0.08);
+      --blue-mid: rgba(0, 63, 163, 0.2);
+      --text: #222;
+      --muted: #666;
+      --border: #e0e0e0;
+      --bg: #fff;
+      --card-bg: #fafafa;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "JetBrains Mono", "LXGW WenKai Screen", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* Header */
+    header {
+      border-bottom: 1.5px solid var(--border);
+      padding: 32px 48px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    header img {
+      height: 48px;
+    }
+    header .header-text h1 {
+      font-size: 1.4em;
+      font-weight: 700;
+      color: var(--blue);
+    }
+    header .header-text p {
+      font-size: 0.78em;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Main */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 0;
+    }
+
+    .section-title {
+      font-size: 0.72em;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Cards grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .card {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      background: var(--card-bg);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+    .card:hover {
+      border-color: var(--blue);
+      box-shadow: 0 4px 16px rgba(0, 63, 163, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 0.65em;
+      font-weight: 700;
+      color: var(--blue);
+      background: var(--blue-light);
+      border-radius: 20px;
+      padding: 2px 10px;
+      width: fit-content;
+    }
+
+    .card-title {
+      font-size: 0.95em;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .card-desc {
+      font-size: 0.75em;
+      color: var(--muted);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .card-meta {
+      font-size: 0.68em;
+      color: #aaa;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-arrow {
+      font-size: 0.9em;
+      color: var(--blue);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .card:hover .card-arrow {
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 0.72em;
+      color: #bbb;
+    }
+    footer a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="sharing/site/graph/logo.png" alt="ZJU Logo">
+  <div class="header-text">
+    <h1>Slides</h1>
+    <p>杜宗泽 · 浙江大学 CAD&CG 实验室 · <a href="https://yaoyaolingbro.github.io" style="color: var(--blue); text-decoration:none;">yaoyaolingbro.github.io</a></p>
+  </div>
+</header>
+
+<main>
+
+  <p class="section-title">分享 & 交流</p>
+  <div class="grid">
+
+    <a class="card" href="sharing/site/index.html">
+      <span class="card-tag">分享交流会</span>
+      <div class="card-title">本博贯通经验分享</div>
+      <div class="card-desc">科研、项目、读博价值导向——送给学弟学妹的经验与思考</div>
+      <div class="card-meta">
+        <span>2026.04</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="card" href="person/site/index.html">
+      <span class="card-tag">个人介绍</span>
+      <div class="card-title">杜宗泽 个人介绍</div>
+      <div class="card-desc">个人背景、研究方向、竞赛经历与团队介绍</div>
+      <div class="card-meta">
+        <span>2024.03</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <p class="section-title">科研 & 技术</p>
+  <div class="grid">
+
+    <a class="card" href="pretrain/site/index.html">
+      <span class="card-tag">科研报告</span>
+      <div class="card-title">基于蛋白质结构表征的预训练模型</div>
+      <div class="card-desc">蛋白质结构预训练方法综述，含表征学习与下游任务应用</div>
+      <div class="card-meta">
+        <span>2024.05</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="card" href="ADS/site/index.html">
+      <span class="card-tag">项目</span>
+      <div class="card-title">Mini-Search</div>
+      <div class="card-desc">搜索引擎课程项目展示</div>
+      <div class="card-meta">
+        <span>2024</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <p class="section-title">课程 & 教学</p>
+  <div class="grid">
+
+    <a class="card" href="ICL/slides/index.html">
+      <span class="card-tag">课程</span>
+      <div class="card-title">Crash Course for C</div>
+      <div class="card-desc">C 语言入门速成，面向零基础同学</div>
+      <div class="card-meta">
+        <span>2023</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+</main>
+
+<footer>
+  <p>Built with <a href="https://github.com/webpro/reveal-md">reveal-md</a> · <a href="https://github.com/Yaoyaolingbro/slides">GitHub</a></p>
+</footer>
+
+</body>
+</html>
